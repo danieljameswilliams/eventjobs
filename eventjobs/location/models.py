@@ -7,6 +7,9 @@ class Location(models.Model):
   latitude = models.CharField(max_length=50)
   longitude = models.CharField(max_length=50)
 
+  def __unicode__(self):
+    return self.address
+
 
 # #######################
 # ##### SERIALIZERS #####

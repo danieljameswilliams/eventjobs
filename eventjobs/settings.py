@@ -48,6 +48,7 @@ INSTALLED_APPS = (
   'eventjobs.group',
   'eventjobs.organization',
   'eventjobs.venue',
+  'eventjobs.contact',
   'eventjobs.event'
 )
 

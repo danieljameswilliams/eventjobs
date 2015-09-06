@@ -1,5 +1,6 @@
 from django.db import models
 from rest_framework import serializers, viewsets
+from eventjobs.contact.models import Contact
 
 # #################
 # ##### MODEL #####
@@ -7,6 +8,10 @@ from rest_framework import serializers, viewsets
 
 class Venue(models.Model):
   name = models.CharField(max_length=255)
+  contact = models.ForeignKey(Contact, related_name='Venue_contact', null=True, blank=True)
+
+  def __unicode__(self):
+    return self.name
 
 
 # ######################

@@ -5,6 +5,7 @@ from django.contrib.contenttypes.models import ContentType
 from eventjobs.location.models import Location, LocationSerializer
 from eventjobs.venue.models import Venue, VenueSerializer
 from rest_framework import serializers, viewsets
+from eventjobs.contact.models import Contact, ContactSerializer
 
 PAYMENT_TYPES = (
   ('fixed', 'Fixed Salary'),
@@ -31,7 +32,6 @@ class EventRole(models.Model):
     return self.name
 
 class EventShift(models.Model):
-  event = models.ForeignKey('Event', related_name='EventShift_event')
   role = models.ForeignKey(EventRole, related_name='EventShift_role', null=True, blank=True)
   quantity = models.IntegerField()
   start_at = models.DateTimeField()
@@ -50,7 +50,8 @@ class Event(models.Model):
   created_by = models.ForeignKey(Venue, related_name='Event_created_by')
   start_at = models.DateTimeField()
   end_at = models.DateTimeField()
-  rsvp = models.DateTimeField()
+  rsvp_at = models.DateTimeField()
+  contact = models.ForeignKey(Contact, related_name='Event_contact', null=True, blank=True)
   shifts = models.ManyToManyField(EventShift, related_name='Event_shifts')
 
   def __unicode__(self):
@@ -84,11 +85,12 @@ class EventShiftSerializer(serializers.HyperlinkedModelSerializer):
 class EventSerializer(serializers.HyperlinkedModelSerializer):
   location = LocationSerializer()
   created_by = VenueSerializer()
-  shifts = EventShiftSerializer()  # TODO: Gives an error http://d.pr/i/AE4L
+  contact = ContactSerializer()
+  shifts = EventShiftSerializer(many=True)
 
   class Meta:
     model = Event
-    fields = ('id', 'url', 'name', 'description', 'location', 'payment_type', 'quantity', 'created_at', 'created_by', 'start_at', 'end_at', 'rsvp', 'shifts')
+    fields = ('id', 'url', 'name', 'description', 'contact', 'location', 'payment_type', 'quantity', 'created_at', 'created_by', 'start_at', 'end_at', 'rsvp_at', 'shifts')
 
 
 # ####################
